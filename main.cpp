@@ -1,41 +1,69 @@
 #include <iostream>
+#include <cmath>
 #include <raylib.h>
+#include <raymath.h>
+#include "Ball.h"
+#include "Wall.h"
+#include <vector>
 
 using namespace std;
 
-int main () {
+double lastUpdateTime = 0;
 
-    const int SCREEN_WIDTH = 800;
-    const int SCREEN_HEIGHT = 600;
-    int ball_x = 100;
-    int ball_y = 100;
-    int ball_speed_x = 5;
-    int ball_speed_y = 5;
-    int ball_radius = 15;
+Ball ball(Vector2{540, 480}, Vector2{0.0f, 0.0f}); // Initial position at the center of the screen
+
+Wall wall1(Vector2{200, 560}, 200, 20, 50);
+vector<Wall> walls = {};
+
+bool eventTriggered(double interval) {
+    double currentTime = GetTime();
+    if(currentTime - lastUpdateTime >= interval) {
+        lastUpdateTime = currentTime;
+        return true;
+    }
+    return false;
+}
+
+int main () {
+    const int SCREEN_WIDTH = 1080;
+    const int SCREEN_HEIGHT = 960;
+
+    Vector2 startMousePos = {0, 0};
+    Vector2 endMousePos = {0, 0};
+
+    walls.push_back(wall1);
 
     cout << "Hello World" << endl;
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "My first RAYLIB program!");
     SetTargetFPS(60);
 
+    const Image backdrop = LoadImage("./images/grass.png");
+    Texture2D backdropTexture = LoadTextureFromImage(backdrop);
+    UnloadImage(backdrop);
+
     while (WindowShouldClose() == false){
-   
-        ball_x += ball_speed_x;
-        ball_y += ball_speed_y;
 
-        if(ball_x + ball_radius >= SCREEN_WIDTH || ball_x - ball_radius <= 0)
-        {
-            ball_speed_x *= -1;
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            startMousePos = GetMousePosition();
         }
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+            endMousePos = GetMousePosition();
+            ball.Hit(startMousePos, endMousePos);
 
-        if(ball_y + ball_radius >= SCREEN_HEIGHT || ball_y - ball_radius <= 0)
-        {
-            ball_speed_y *= -1;
+        }
+        ball.updatePosition();
+        for(long long unsigned int i = 0; i < walls.size(); i++) {
+            ball.reflectBall(walls[i]);
         }
         
+        
         BeginDrawing();
-            ClearBackground(BLACK);
-            DrawCircle(ball_x,ball_y,ball_radius, WHITE);
+            DrawTexture(backdropTexture, 0, 0, WHITE);
+            ball.Draw();
+            for (Wall& wall : walls) {
+                wall.Draw();
+            }
         EndDrawing();
     }
 
