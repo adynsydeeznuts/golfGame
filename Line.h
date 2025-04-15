@@ -29,6 +29,10 @@ public:
         return sqrt(dx * dx + dy * dy);
     }
 
+    void Draw() const {
+        DrawLineV(point1, point2, DARKBROWN);
+    }
+
 };
 
 #endif
