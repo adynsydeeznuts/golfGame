@@ -12,27 +12,27 @@
 using namespace std;
 
 class Wall {
-private:
+protected:
     Vector2 position; // Position of the wall's center
-    float width; // Width of the wall
-    float height; // Height of the wall
-    float rotation; // Rotation angle of the wall in degrees
-    Vector2 origin = {width / 2, height / 2};
-
-    Color color = BROWN;
+    float width;      // Width of the wall
+    float height;     // Height of the wall
+    float rotation;   // Rotation angle of the wall in degrees
+    Color color;
+    Vector2 origin;
 
 public:
     // Constructor
-    Wall(Vector2(position), float width, float height, float rotation = 0.0f)
-        : position(position), width(width), height(height), rotation(rotation) {}
+    Wall(Vector2 position, float width, float height, float rotation = 0.0f, Color color = BROWN)
+        : position(position), width(width), height(height), rotation(rotation), color(color), origin({width / 2, height / 2}) {}
 
     // Getters
     Vector2 getPosition() const { return position; }
     float getWidth() const { return width; }
     float getHeight() const { return height; }
     float getRotation() const { return rotation; }
+    Color getColor() const { return color; }
 
-    void Draw() {
+    virtual void Draw() {
         DrawRectanglePro(Rectangle{position.x, position.y, width, height}, origin, rotation, color);
     }
 
@@ -64,8 +64,6 @@ public:
 
         return {line1, line2, line3, line4};
     }
-
-
 };
 
 #endif

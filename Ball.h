@@ -7,6 +7,8 @@
 #include <cmath>
 #include "Wall.h"
 
+using namespace std;
+
 class Ball {
 private:
     float radius = 10.0f; // Default radius
@@ -100,8 +102,8 @@ public:
                 Vector2 tempP = Vector2Add(position, correction);
                 setPosition(tempP.x, tempP.y);
 
-                std::cout << "Collision Normal: " << lineNormal.x << ", " << lineNormal.y << std::endl;
-                std::cout << "Distance: " << distance << std::endl;
+                cout << "Collision Normal: " << lineNormal.x << ", " << lineNormal.y << std::endl;
+                cout << "Distance: " << distance << std::endl;
             }
         }
     }
@@ -110,8 +112,6 @@ public:
         Vector2 power = {startMousePos.x - endMousePos.x, startMousePos.y - endMousePos.y};
         power = Vector2Scale(power, 2.0f);
         setVelocity(power.x, power.y);
-        std::cout << "Hit! Power: " << Vector2Length(power) << std::endl;
-        std::cout << power.x << " " << power.y << std::endl;
     }
 };
 
